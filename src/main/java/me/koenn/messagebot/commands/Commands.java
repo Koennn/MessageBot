@@ -1,9 +1,15 @@
 package me.koenn.messagebot.commands;
 
+import me.koenn.messagebot.MessageBot;
+import me.koenn.messagebot.levelsystem.LevelSystem;
 import me.koenn.messagebot.util.Logger;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -22,8 +28,29 @@ public final class Commands {
                 }
 
                 @Override
+                public Permission getPermission() {
+                    return null;
+                }
+
+                @Override
                 public void execute(User sender, TextChannel channel, Message message, String[] args) {
-                    channel.sendMessage(new MessageBuilder().append("Test successful ").append(sender.getAsMention()).build()).queue();
+                    channel.sendMessage(
+                            new MessageBuilder()
+                                    .append("@everyone ").append("TheKoenn")
+                                    .append(" is now live over at ")
+                                    .append("http://twitch.tv/thekoenn")
+                                    .setEmbed(
+                                            new MessageEmbedImpl()
+                                                    .setUrl("http://test.com")
+                                                    .setTitle("Test message")
+                                                    .setDescription("This is a test :D")
+                                                    .setType(EmbedType.RICH)
+                                                    .setFields(new ArrayList<>())
+                                                    .setColor(Color.GREEN)
+                                                    .setFooter(new MessageEmbed.Footer("Footer message", "", ""))
+                                    )
+                                    .build()
+                    ).queue();
                 }
             },
             new Command() {
@@ -33,13 +60,14 @@ public final class Commands {
                 }
 
                 @Override
+                public Permission getPermission() {
+                    return Permission.ADMINISTRATOR;
+                }
+
+                @Override
                 public void execute(User sender, TextChannel channel, Message message, String[] args) {
                     Member member = channel.getGuild().getMember(sender);
                     Guild guild = channel.getGuild();
-
-                    if (!member.hasPermission(Permission.ADMINISTRATOR)) {
-                        return;
-                    }
 
                     StringBuilder stringBuilder = new StringBuilder();
                     for (String arg : args) {
@@ -63,6 +91,33 @@ public final class Commands {
                     }
 
                     channel.sendMessage(new MessageBuilder().append(sender.getAsMention()).append(" your message was successfully send to all members!").build()).queue();
+                }
+            },
+            new Command() {
+                @Override
+                public String getCommand() {
+                    return "level";
+                }
+
+                @Override
+                public Permission getPermission() {
+                    return null;
+                }
+
+                @Override
+                public void execute(User sender, TextChannel channel, Message message, String[] args) {
+                    String username = sender.getName();
+                    int level = MessageBot.levelSystem.getLevel(username);
+                    int exp = MessageBot.levelSystem.getExp(username);
+                    int neededExp = LevelSystem.getExpAtLevel(level);
+
+                    channel.sendMessage(new MessageBuilder().setEmbed(new MessageEmbedImpl()
+                            .setAuthor(new MessageEmbed.AuthorInfo(username, "", sender.getEffectiveAvatarUrl(), ""))
+                            .setTitle("Current level and experience:")
+                            .setDescription("**Level:** " + level + "\n**Exp:** " + exp + "/" + neededExp)
+                            .setColor(Color.GREEN)
+                            .setFields(new ArrayList<>())
+                    ).build()).queue();
                 }
             }
     };

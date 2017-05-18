@@ -1,6 +1,6 @@
 package me.koenn.messagebot.commands;
 
-import net.dv8tion.jda.core.entities.Channel;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -15,6 +15,8 @@ import net.dv8tion.jda.core.entities.User;
 public interface Command {
 
     String getCommand();
+
+    Permission getPermission();
 
     void execute(User sender, TextChannel channel, Message message, String[] args);
 }
