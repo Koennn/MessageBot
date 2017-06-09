@@ -12,10 +12,17 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="twitch-api-wrapper-0.3-jar-with-dependencies" level="project" />
-    <orderEntry type="library" name="Maven: net.dv8tion:JDA:3.0.0_200" level="project" />
+    <orderEntry type="library" name="jnbt-1.1" level="project" />
+    <orderEntry type="library" name="Classifier4J-0.6" level="project" />
+    <orderEntry type="library" name="DJNativeSwing" level="project" />
+    <orderEntry type="library" name="DJNativeSwing-SWT" level="project" />
+    <orderEntry type="library" name="jna-4.0.0" level="project" />
+    <orderEntry type="library" name="swt" level="project" />
+    <orderEntry type="library" name="json-simple-1.1.1" level="project" />
+    <orderEntry type="library" name="gson-2.6.2" level="project" />
+    <orderEntry type="library" name="Maven: net.dv8tion:JDA:3.1.1_212" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.commons:commons-lang3:3.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.json:json:20160810" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.sf.trove4j:trove4j:3.0.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.dev.jna:jna:4.4.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.neovisionaries:nv-websocket-client:2.0" level="project" />
@@ -40,7 +47,11 @@
     <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-jackson2:1.22.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava-jdk5:17.0" level="project" />
-    <orderEntry type="library" name="jnbt-1.1" level="project" />
-    <orderEntry type="library" name="Classifier4J-0.6" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.0.0-M4" level="project" />
+    <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.0.0-M2" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.0.0-M4" level="project" />
+    <orderEntry type="library" name="Maven: com.michaelwflaherty:cleverbotapi:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
   </component>
 </module>

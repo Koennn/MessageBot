@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="jna-4.0.0">
+    <CLASSES>
+      <root url="jar://G:/Libraries/DJNativeSwing-SWT-1-0-2/lib/jna/jna-4.0.0.jar!/" />
+      <root url="jar://G:/Libraries/DJNativeSwing-SWT-1-0-2/lib/jna/jna_WindowUtils.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

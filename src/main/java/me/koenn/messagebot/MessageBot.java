@@ -1,15 +1,21 @@
 package me.koenn.messagebot;
 
 import com.mb3364.twitch.api.models.Channel;
+import me.koenn.messagebot.chatbot.ChatBot;
 import me.koenn.messagebot.commands.CommandManager;
 import me.koenn.messagebot.levelsystem.LevelSystem;
+import me.koenn.messagebot.listeners.ChatListener;
 import me.koenn.messagebot.listeners.CommandListener;
+import me.koenn.messagebot.listeners.JoinListener;
 import me.koenn.messagebot.listeners.MessageListener;
 import me.koenn.messagebot.twitch.TwitchPinger;
 import me.koenn.messagebot.util.Logger;
+import me.koenn.messagebot.util.Range;
 import me.koenn.messagebot.util.ThreadManager;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
 import net.dv8tion.jda.core.utils.SimpleLog;
@@ -20,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * <p>
@@ -35,8 +44,9 @@ public final class MessageBot {
     public static TwitchPinger pinger;
     public static ThreadManager threadManager;
     public static LevelSystem levelSystem;
+    public static ChatBot chatBot;
 
-    public MessageBot(String token) {
+    public MessageBot(String token) throws InterruptedException {
         Logger.LOG.setLevel(SimpleLog.Level.DEBUG);
         Logger.info("Initializing CoffeeMod v1.0...");
 
@@ -51,15 +61,19 @@ public final class MessageBot {
             Logger.error("Error while loading levelsystem: " + e);
         }
 
+        chatBot = new ChatBot(UUID.randomUUID().toString(), 6);
+
         bot = new DiscordBot(token, "CoffeeMod");
         bot.addListeners(
                 new CommandListener(),
-                new MessageListener()
+                new MessageListener(),
+                new JoinListener(),
+                new ChatListener()
         );
 
         CommandManager.registerCommands();
 
-        /*pinger = new TwitchPinger();
+        pinger = new TwitchPinger();
         pinger.listeners.add((stream) -> {
             for (TextChannel channel : bot.getJDA().getTextChannelsByName("content-creators", false)) {
                 Channel streamChannel = stream.getChannel();
@@ -89,7 +103,21 @@ public final class MessageBot {
                                 .setFields(new ArrayList<>())
                         ).build()).queue();
             }
-        });*/
+        });
+
+        Thread.sleep(500);
+
+        Guild guild = bot.getJDA().getGuilds().get(0);
+        for (int i = 0; i < 100; i += 10) {
+            final int index = i;
+            java.util.List<Role> roles = guild.getRolesByName(i + " - " + (i + 10) + " Plug", true);
+            if (roles.isEmpty()) {
+                final Random random = new Random();
+                guild.getController().createRole().queue(role -> role.getManager().setName(index + " - " + (index + 10) + " Plug").queue(aVoid -> role.getManager().setColor(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat())).queue(aVoid1 -> MessageListener.roles.put(new Range(index, index + 10), role))));
+            } else {
+                MessageListener.roles.put(new Range(i, i + 10), roles.get(0));
+            }
+        }
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         threadManager.createThread("console-thread", () -> {
@@ -108,7 +136,7 @@ public final class MessageBot {
         }, true);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         if (args.length == 0) {
             System.err.println("No token provided!");
             return;

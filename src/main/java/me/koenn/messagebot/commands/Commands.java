@@ -2,6 +2,7 @@ package me.koenn.messagebot.commands;
 
 import me.koenn.messagebot.MessageBot;
 import me.koenn.messagebot.levelsystem.LevelSystem;
+import me.koenn.messagebot.listeners.CommandListener;
 import me.koenn.messagebot.util.Logger;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -33,24 +34,21 @@ public final class Commands {
                 }
 
                 @Override
-                public void execute(User sender, TextChannel channel, Message message, String[] args) {
-                    channel.sendMessage(
-                            new MessageBuilder()
-                                    .append("@everyone ").append("TheKoenn")
-                                    .append(" is now live over at ")
-                                    .append("http://twitch.tv/thekoenn")
-                                    .setEmbed(
-                                            new MessageEmbedImpl()
-                                                    .setUrl("http://test.com")
-                                                    .setTitle("Test message")
-                                                    .setDescription("This is a test :D")
-                                                    .setType(EmbedType.RICH)
-                                                    .setFields(new ArrayList<>())
-                                                    .setColor(Color.GREEN)
-                                                    .setFooter(new MessageEmbed.Footer("Footer message", "", ""))
-                                    )
-                                    .build()
-                    ).queue();
+                public Message execute(User sender, TextChannel channel, Message message, String[] args) {
+                    return new MessageBuilder()
+                            .append("@everyone ").append("TheKoenn")
+                            .append(" is now live over at ")
+                            .append("http://twitch.tv/thekoenn")
+                            .setEmbed(
+                                    new MessageEmbedImpl()
+                                            .setUrl("http://test.com")
+                                            .setTitle("Test message")
+                                            .setDescription("This is a test :D")
+                                            .setType(EmbedType.RICH)
+                                            .setFields(new ArrayList<>())
+                                            .setColor(Color.GREEN)
+                                            .setFooter(new MessageEmbed.Footer("Footer message", "", ""))
+                            ).build();
                 }
             },
             new Command() {
@@ -65,7 +63,7 @@ public final class Commands {
                 }
 
                 @Override
-                public void execute(User sender, TextChannel channel, Message message, String[] args) {
+                public Message execute(User sender, TextChannel channel, Message message, String[] args) {
                     Member member = channel.getGuild().getMember(sender);
                     Guild guild = channel.getGuild();
 
@@ -90,7 +88,7 @@ public final class Commands {
                         }
                     }
 
-                    channel.sendMessage(new MessageBuilder().append(sender.getAsMention()).append(" your message was successfully send to all members!").build()).queue();
+                    return new MessageBuilder().append(sender.getAsMention()).append(" your message was successfully send to all members!").build();
                 }
             },
             new Command() {
@@ -105,19 +103,35 @@ public final class Commands {
                 }
 
                 @Override
-                public void execute(User sender, TextChannel channel, Message message, String[] args) {
-                    String username = sender.getName();
+                public Message execute(User sender, TextChannel channel, Message message, String[] args) {
+                    String username = sender.getName() + "#" + sender.getId();
                     int level = MessageBot.levelSystem.getLevel(username);
                     int exp = MessageBot.levelSystem.getExp(username);
                     int neededExp = LevelSystem.getExpAtLevel(level);
 
-                    channel.sendMessage(new MessageBuilder().setEmbed(new MessageEmbedImpl()
-                            .setAuthor(new MessageEmbed.AuthorInfo(username, "", sender.getEffectiveAvatarUrl(), ""))
+                    return new MessageBuilder().setEmbed(new MessageEmbedImpl()
+                            .setAuthor(new MessageEmbed.AuthorInfo(sender.getName(), "", sender.getEffectiveAvatarUrl(), ""))
                             .setTitle("Current level and experience:")
                             .setDescription("**Level:** " + level + "\n**Exp:** " + exp + "/" + neededExp)
                             .setColor(Color.GREEN)
                             .setFields(new ArrayList<>())
-                    ).build()).queue();
+                    ).build();
+                }
+            },
+            new Command() {
+                @Override
+                public String getCommand() {
+                    return "lvl";
+                }
+
+                @Override
+                public Permission getPermission() {
+                    return null;
+                }
+
+                @Override
+                public Message execute(User sender, TextChannel channel, Message message, String[] args) {
+                    return CommandListener.interperate(new MessageBuilder().append(message.getContent().replace("!lvl", "!level")).build(), sender, channel);
                 }
             }
     };

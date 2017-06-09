@@ -4,6 +4,8 @@ import me.koenn.messagebot.util.Logger;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.impl.GameImpl;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -27,7 +29,9 @@ public class DiscordBot {
                     .setToken(token)
                     .setEnableShutdownHook(true)
                     .setAutoReconnect(true)
+                    .setGame(new GameImpl("with you!", "", Game.GameType.DEFAULT))
                     .buildAsync();
+            this.jda.setAutoReconnect(true);
         } catch (LoginException e) {
             Logger.error("Failed to log in to Discord with token \'" + token + "\'");
         } catch (RateLimitedException e) {

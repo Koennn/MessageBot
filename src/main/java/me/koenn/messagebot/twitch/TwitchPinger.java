@@ -39,8 +39,7 @@ public class TwitchPinger implements Runnable {
                 this.twitch.streams().get(streamer, new StreamResponseHandler() {
                     @Override
                     public void onSuccess(Stream stream) {
-                        Logger.debug(stream);
-                        if (/*!online && */stream != null) {
+                        if (!online && stream != null) {
                             listeners.forEach(streamListener -> streamListener.onStreamStart(stream));
                         }
                         online = stream != null;
@@ -59,12 +58,10 @@ public class TwitchPinger implements Runnable {
             }
         });
 
-        Logger.debug("Waiting for ping response...");
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            Logger.error("Pinger thread interrupted: " + e);
+            throw new RuntimeException("Pinger thread interrupted: " + e);
         }
-        Logger.debug("Starting new ping cycle...");
     }
 }

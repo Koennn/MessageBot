@@ -18,5 +18,5 @@ public interface Command {
 
     Permission getPermission();
 
-    void execute(User sender, TextChannel channel, Message message, String[] args);
+    Message execute(User sender, TextChannel channel, Message message, String[] args);
 }
